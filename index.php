@@ -8,7 +8,8 @@
 </head>
 <body>
     <?php 
-        scan_db();
+        // scan_db();
+        // add_to_db('mahasiswa', 'Jordansaa', 'nilai:PBO', '40');
 
         function scan_db(){
             // persiapkan curl
@@ -34,7 +35,7 @@
             // tutup curl 
             curl_close($ch);      
 
-            // // menampilkan hasil curl
+            // menampilkan hasil curl
             $datas = json_decode($output);
 
             $obj = $datas->Row;
@@ -71,36 +72,61 @@
             }
         }
 
-        function add_to_db(){
+        function add_to_db($table_name, $key, $column_name, $value){
+            $data = array(
+                'column' => base64_encode($column_name),
+                '$' => base64_encode($value)
+            );
+
+            $record = new Record(base64_encode($key), $data);
+
+            $row = new Row($record);
+
+            // echo json_encode($row);
+
             // persiapkan curl
             $ch = curl_init(); 
 
             // header
             $request_headers = array();
             $request_headers[] = 'Accept: application/json';
-
+            $request_headers[] = 'Content-Type: application/json';
 
             // set header
             curl_setopt($ch, CURLOPT_HTTPHEADER, $request_headers);
 
             // set url 
-            curl_setopt($ch, CURLOPT_URL, "http://localhost:8081/");
+            curl_setopt($ch, CURLOPT_URL, "http://localhost:8081/$table_name/fakerow");
 
             // return the transfer as a string 
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1); 
+            // curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1); 
 
             curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "PUT");
 
+            curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($row));
+
             // $output contains the output string 
-            $output = curl_exec($ch); 
-
+            curl_exec($ch);
             // tutup curl 
-            curl_close($ch);      
+            curl_close($ch);
+        }
 
-            // menampilkan hasil curl
-            // echo $output;
+        class Record {
+            public $key;
+            public $Cell = [];
 
-            var_dump($output);
+            function __construct($key, $cell) {
+                $this->key = $key;
+                array_push($this->Cell, $cell);
+              }
+        }
+
+        class Row {
+            public $Row = [];
+
+            function __construct($record) {
+                array_push($this->Row, $record);
+              }
         }
     ?>
 </body>
