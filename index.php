@@ -8,9 +8,28 @@
 </head>
 <body>
     <?php 
-        // scan_db('mahasiswa');
-        // add_to_db('mahasiswa', 'ABC', 'nilai:asd', '55');
-        get_db('mahasiswa', 'ABC');
+        // scan database
+        scan_db('mahasiswa');
+        
+        // // insert data to database
+        // $data1 = array(
+        //     'column' => base64_encode('nilai:DAA'),
+        //     '$' => base64_encode('10')
+        // );
+        
+        // $data2 = array(
+        //     'column' => base64_encode('nilai:PBO'),
+        //     '$' => base64_encode('50')
+        // );
+        
+        // $arr_data = [];
+        
+        // array_push($arr_data, $data1, $data2);
+        
+        // add_to_db('mahasiswa', 'Bebas', $arr_data);
+
+        // // get from database
+        // get_db('mahasiswa', 'Kris');
 
         function scan_db($table_name){
             // persiapkan curl
@@ -41,12 +60,7 @@
             
         }
 
-        function add_to_db($table_name, $key, $column_name, $value){
-            $data = array(
-                'column' => base64_encode($column_name),
-                '$' => base64_encode($value)
-            );
-
+        function add_to_db($table_name, $key, $data){
             $record = new Record(base64_encode($key), $data);
 
             $row = new Row($record);
@@ -150,7 +164,7 @@
 
             function __construct($key, $cell) {
                 $this->key = $key;
-                array_push($this->Cell, $cell);
+                $this->Cell = $cell;
               }
         }
 
