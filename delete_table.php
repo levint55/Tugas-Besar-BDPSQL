@@ -7,8 +7,21 @@
     <title>Document</title>
 </head>
 <body>
+    <h1>Delete Table</h1>
+    <form action="delete_table.php" method="post">
+        Table Name:<br>
+        <input type="text" name="table_name" required>
+        <br><br>
+        <input type="submit" value="Submit">
+    </form>
     <?php
-        // delete_table('tweet');
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+
+            delete_table($_POST['table_name']);
+
+            echo "<br>";
+            echo "tabel ".$_POST['table_name']." berhasil dihapus";
+        }
 
         function delete_table($table_name){
 
