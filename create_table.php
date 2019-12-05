@@ -7,21 +7,39 @@
     <title>Document</title>
 </head>
 <body>
+    <h1>Create Table</h1>
+    <form action="create_table.php" method="post">
+        Table Name:<br>
+        <input type="text" name="table_name" required>
+        <br>
+        Column Family 1 Name:<br>
+        <input type="text" name="cf_1_name" required>
+        <br>
+        Column Family 2 Name:<br>
+        <input type="text" name="cf_2_name" required>
+        <br><br>
+        <input type="submit" value="Submit">
+    </form>
     <?php
-        // buat kolomnya dalam bentuk array
-        $data1 = array(
-            'name' => 'kolom1',
-        );
 
-        $data2 = array(
-            'name' => 'kolom2',
-        );
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $data1 = array(
+                'name' => $_POST['cf_1_name'],
+            );
+    
+            $data2 = array(
+                'name' => $_POST['cf_2_name'],
+            );
 
-        $arr_data = [];
+            $arr_data = [];
 
-        array_push($arr_data, $data1, $data2);
+            array_push($arr_data, $data1, $data2);
 
-        // add_table('table3', $arr_data);
+            add_table($_POST['table_name'], $arr_data);
+
+            echo "<br>";
+            echo "tabel ".$_POST['table_name']." berhasil dimasukkan";
+        }
 
         function add_table($table_name, $columns){
             $table = new Table($table_name, $columns);
