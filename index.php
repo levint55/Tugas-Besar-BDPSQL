@@ -10,7 +10,7 @@
     <?php 
         // scan database
         scan_db('mahasiswa');
-        
+        echo "masuk";
         // // insert data to database
         // $data1 = array(
         //     'column' => base64_encode('nilai:DAA'),
