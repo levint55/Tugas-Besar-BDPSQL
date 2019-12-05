@@ -22,6 +22,9 @@
         <li class="nav-item">
             <a class="nav-link" href="/insert_table.php">Insert Table</a>
         </li>
+        <li class="nav-item">
+            <a class="nav-link" href="/get_table.php">Get Row From Table</a>
+        </li>
     </ul>
     <div class="container">
         <h1>Delete Table</h1>

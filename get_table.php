@@ -10,34 +10,39 @@
     <script src="js/bootstrap.min.js"></script>
 </head>
 <style>
-#customers {
-  font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
-  border-collapse: collapse;
-  width: 100%;
-}
+    #customers {
+        font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+        border-collapse: collapse;
+        width: 100%;
+    }
 
-#customers td, #customers th {
-  border: 1px solid #ddd;
-  padding: 8px;
-}
+    #customers td,
+    #customers th {
+        border: 1px solid #ddd;
+        padding: 8px;
+    }
 
-#customers tr:nth-child(even){background-color: #f2f2f2;}
+    #customers tr:nth-child(even) {
+        background-color: #f2f2f2;
+    }
 
-#customers tr:hover {background-color: #ddd;}
+    #customers tr:hover {
+        background-color: #ddd;
+    }
 
-#customers th {
-  padding-top: 12px;
-  padding-bottom: 12px;
-  text-align: left;
-  background-color: #4CAF50;
-  color: white;
-}
+    #customers th {
+        padding-top: 12px;
+        padding-bottom: 12px;
+        text-align: left;
+        background-color: #4CAF50;
+        color: white;
+    }
 </style>
 
 <body>
     <ul class="nav">
         <li class="nav-item">
-            <a class="nav-link" href="/">Home</a>
+            <a class="nav-link" href="/index.php">Home</a>
         </li>
         <li class="nav-item">
             <a class="nav-link" href="/create_table.php">Create Table</a>
@@ -49,31 +54,35 @@
             <a class="nav-link" href="/insert_table.php">Insert Table</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" href="/get_table.php">Get Row From Table</a>
+            <a class="nav-link" href="/">Filter Table</a>
         </li>
     </ul>
     <div class="container">
-        <h1>Look for Tables</h1>
-        <form action="index.php" method="post">
+        <h1>Filter By Row Key</h1>
+        <form action="get_table.php" method="post">
             <div class="form-group">
                 <label for="table_name">Table Name:</label>
                 <input type="text" class="form-control" id="table_name" name="table_name" required>
             </div>
-            <button type="submit" class="btn btn-primary">Search</button>
+
+            <div class="form-group">
+                <label for="table_name">Row Key</label>
+                <input type="text" class="form-control" id="insert_key" name="insert_key" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Filter</button>
         </form>
     </div>
     <?php
 
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-        echo "Tabel " . $_POST['table_name'];
+        echo "Filtered " . $_POST['table_name'];
         echo "<br>";
         $arr_data = [];
         $table_name = $_POST['table_name'];
-        scan_db($table_name);
-        get_db('mahasiswa', 'Ravi');
-    } else { 
-        
-    }
+        $key = $_POST['insert_key'];
+  
+        get_db($table_name, $key);
+    } else { }
 
     function scan_db($table_name)
     {
@@ -131,7 +140,7 @@
         // tutup curl 
         curl_close($ch);
 
-        json_to_normal($output);
+        json_to_table($output);
     }
 
     function json_to_normal($datas)
@@ -204,9 +213,9 @@
                 $isi = base64_decode($column["\$"]);
 
                 echo "<tr>";
-                echo "<td>".$key."</td>";
-                echo "<td>".$cf.":".$cn."</td>";
-                echo "<td>".$isi."</td>";
+                echo "<td>" . $key . "</td>";
+                echo "<td>" . $cf . ":" . $cn . "</td>";
+                echo "<td>" . $isi . "</td>";
                 echo "</tr>";
             }
         }
