@@ -7,10 +7,35 @@
     <title>Document</title>
 </head>
 <body>
-    <?php 
+    <form action="index.php">
+        First name:<br>
+        <input type="text" name="name"><br>
+        email:<br>
+        <input type="text" name="email">
+        <input type="submit" name="signup">
+    </form>
+    <?php
+
+    //signup
+    if(isset($_GET['signup'])){
+        session_start();
+        $_SESSION['email'] = $_GET['email'];
+        $data1 =array(
+            "column"=>base64_encode("data:name"),
+            "$"=>base64_encode($_GET['name'])
+        );
+
+        $data=[];
+        array_push($data,$data1);
+        $table_name="user";
+        $key=$_GET['email'];
+        add_to_db($table_name,$key,$data);
+        echo 'masuk';
+    }
+
         // scan database
-        scan_db('mahasiswa');
-        echo "masuk";
+      scan_db('user');
+       // echo "masuk";
         // // insert data to database
         // $data1 = array(
         //     'column' => base64_encode('nilai:DAA'),
@@ -44,7 +69,7 @@
             curl_setopt($ch, CURLOPT_HTTPHEADER, $request_headers);
 
             // set url 
-            curl_setopt($ch, CURLOPT_URL, "http://localhost:8081/$table_name/*");
+            curl_setopt($ch, CURLOPT_URL, "http://192.168.99.101:8081/$table_name/*");
 
             // return the transfer as a string 
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1); 
@@ -79,7 +104,7 @@
             curl_setopt($ch, CURLOPT_HTTPHEADER, $request_headers);
 
             // set url 
-            curl_setopt($ch, CURLOPT_URL, "http://localhost:8081/$table_name/fakerow");
+            curl_setopt($ch, CURLOPT_URL, "http://192.168.99.101:8081/$table_name/fakerow");
 
             // return the transfer as a string 
             // curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1); 
