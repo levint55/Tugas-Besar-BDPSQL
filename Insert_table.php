@@ -6,6 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Document</title>
     <link href="css/bootstrap.css" rel="stylesheet" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
     <script src="js/bootstrap.min.js"></script>
 </head>
 <body>
@@ -32,36 +33,63 @@
         </div>
 
         <div class="form-group">
-            <label for="table_name">Nama:</label>
-            <input type="text" class="form-control" id="insert_column" name="insert_column" required>
+            <label for="table_name">Row:</label>
+            <input type="text" class="form-control" id="insert_key" name="insert_key" required>
         </div>
 
-        <div class="form-group">
-            <label for="table_name">Data:</label>
-            <input type="text" class="form-control" id="insert_data" name="insert_data" required>
+        <div id="columfamily">
+              <div class="form-group">
+                  <label for="cf_name[]">Column Family:Name 1</label>
+                  <input type="text" class="form-control" id="cf_name" name="cf_name[]" required>
+              </div>
+              <div class="form-group">
+                  <label for="value[]">value 1:</label>
+                  <input type="text" class="form-control" id="value" name="value[]" required>
+              </div>
         </div>
 
            <button type="submit" class="btn btn-primary" id="insert">Insert</button>
+           <button type="button" class="btn btn-secondary" id="add">+</button>
+
+            <script>
+            $(document).ready(function() {
+                let formCount = 2;
+                $("button#add").click(function() {
+                    let formGroup = $("<div/>", {class:"form-group"});
+                    formGroup.append($("<label/>", {for: ("cf_name[]"), text: "Column Family:Name " + formCount}))
+                        .append($("<input/>", {type:"text", class:"form-control", name: "cf_name[]", required:"required"}));
+                    $("#columfamily").append(formGroup);
+
+                    formGroup.append($("<label/>", {for: ("value[]"), text: "value " + formCount}))
+                        .append($("<input/>", {type:"text", class:"form-control", name: "value[]", required:"required"}));
+                    $("#columfamily").append(formGroup);
+                    formCount++;
+                })
+            })
+            </script>
         </form>
     </div>
 
     <?php
-        
-
         // scan database
         //scan_db('mahasiswa');
         if($_SERVER['REQUEST_METHOD'] === 'POST'){
             $arr_data = [];
-            $data1 =array(
-                "column"=>base64_encode("nilai:DAA"),
-                "$"=>base64_encode($_POST['insert_data'])
-            );
-            array_push($arr_data,$data1);
+
+            foreach (array_combine($_POST['cf_name'],$_POST['value']) as $column=>$value) {
+                $data = array(
+                    'column' => base64_encode($column),
+                    '$'=> base64_encode($value)
+
+                );
+
+                array_push($arr_data, $data);
+            }
            
             $table_name=$_POST['table_name'];
-            $key=$_POST['insert_column'];
+            $key=$_POST['insert_key'];
             add_to_db($table_name,$key,$arr_data);
-            echo "tabel ".$_POST['table_name']." berhasil dimasukkan";
+            echo "data berhasil dimasukkan ke tabel ".$_POST['table_name'];
         }
       
         // $data1 = array(
