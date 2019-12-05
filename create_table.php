@@ -6,6 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Document</title>
     <link href="css/bootstrap.css" rel="stylesheet" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
     <script src="js/bootstrap.min.js"></script>
 </head>
 <body>
@@ -27,31 +28,42 @@
                 <label for="table_name">Table Name:</label>
                 <input type="text" class="form-control" id="table_name" name="table_name" required>
             </div>
-            <div class="form-group">
-                <label for="cf_1_name">Column Family 1 Name:</label>
-                <input type="text" class="form-control" id="cf_1_name" name="cf_1_name" required>
-            </div>
-            <div class="form-group">
-                <label for="cf_2_name">Column Family 2 Name:</label>
-                <input type="text" class="form-control" id="cf_2_name" name="cf_2_name" required>
-            </div>
+            <div id="columfamily">
+              <div class="form-group">
+                  <label for="cf_name[]">Column Family 1 Name:</label>
+                  <input type="text" class="form-control" id="cf_name" name="cf_name[]" required>
+              </div>
+          	</div>
+
             <button type="submit" class="btn btn-primary">Submit</button>
+          	<button type="button" class="btn btn-secondary" id="add">+</button>
+
+          	<script>
+              $(document).ready(function() {
+                let formCount = 2;
+                $("button#add").click(function() {
+                  let formGroup = $("<div/>", {class:"form-group"});
+                  formGroup.append($("<label/>", {for: ("cf_name[]"), text: "Column Family " + formCount + " Name"}))
+                  	.append($("<input/>", {type:"text", class:"form-control", name: "cf_name[]", required:"required"}));
+                  $("#columfamily").append(formGroup);
+                  formCount++;
+                })
+              })
+          	</script>
         </form>
     </div>
     <?php
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $data1 = array(
-                'name' => $_POST['cf_1_name'],
-            );
-    
-            $data2 = array(
-                'name' => $_POST['cf_2_name'],
-            );
-
             $arr_data = [];
 
-            array_push($arr_data, $data1, $data2);
+            foreach ($_POST['cf_name'] as $data) {
+                $data = array(
+                    'name' => $data,
+                );
+
+                array_push($arr_data, $data);
+            }
 
             add_table($_POST['table_name'], $arr_data);
 
