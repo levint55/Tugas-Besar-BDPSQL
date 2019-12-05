@@ -5,15 +5,31 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Document</title>
+    <link href="css/bootstrap.css" rel="stylesheet" />
+    <script src="js/bootstrap.min.js"></script>
 </head>
 <body>
-    <h1>Delete Table</h1>
-    <form action="delete_table.php" method="post">
-        Table Name:<br>
-        <input type="text" name="table_name" required>
-        <br><br>
-        <input type="submit" value="Submit">
-    </form>
+    <ul class="nav">
+        <li class="nav-item">
+            <a class="nav-link" href="/">Home</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="/create_table.php">Create Table</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="/delete_table.php">Delete Table</a>
+        </li>
+    </ul>
+    <div class="container">
+        <h1>Delete Table</h1>
+        <form action="delete_table.php" method="post">
+            <div class="form-group">
+                <label for="table_name">Table Name:</label>
+                <input type="text" class="form-control" id="table_name" name="table_name" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+    </div>
     <?php
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 

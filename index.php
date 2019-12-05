@@ -5,11 +5,24 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Document</title>
+    <link href="css/bootstrap.css" rel="stylesheet" />
+    <script src="js/bootstrap.min.js"></script>
 </head>
 <body>
+    <ul class="nav">
+    <li class="nav-item">
+        <a class="nav-link" href="/">Home</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="/create_table.php">Create Table</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="/delete_table.php">Delete Table</a>
+    </li>
+    </ul> 
     <?php 
         // scan database
-        scan_db('mahasiswa');
+        // scan_db('mahasiswa');
         
         // // insert data to database
         // $data1 = array(
