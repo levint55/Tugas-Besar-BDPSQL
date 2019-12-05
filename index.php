@@ -9,6 +9,30 @@
     <link href="css/bootstrap.css" rel="stylesheet" />
     <script src="js/bootstrap.min.js"></script>
 </head>
+<style>
+#customers {
+  font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+  border-collapse: collapse;
+  width: 100%;
+}
+
+#customers td, #customers th {
+  border: 1px solid #ddd;
+  padding: 8px;
+}
+
+#customers tr:nth-child(even){background-color: #f2f2f2;}
+
+#customers tr:hover {background-color: #ddd;}
+
+#customers th {
+  padding-top: 12px;
+  padding-bottom: 12px;
+  text-align: left;
+  background-color: #4CAF50;
+  color: white;
+}
+</style>
 
 <body>
     <ul class="nav">
@@ -43,6 +67,7 @@
         $arr_data = [];
         $table_name = $_POST['table_name'];
         scan_db($table_name);
+        get_db('mahasiswa', 'Ravi');
     } else { 
         
     }
@@ -149,11 +174,10 @@
         $datas = json_decode($datas);
         $obj = $datas->Row;
 
-        echo "<table style='width:100%'>";
+        echo "<table id='customers', style='width:60%', align='center'>";
         echo "<tr>";
         echo "<th>Row</th>";
-        echo "<th>Column Family</th>";
-        echo "<th>Column Name</th>";
+        echo "<th>Column Family:Name</th>";
         echo "<th>Values</th>";
         echo "</tr>";
 
@@ -177,10 +201,9 @@
                 $isi = base64_decode($column["\$"]);
 
                 echo "<tr>";
-                echo "<th>".$key."</th>";
-                echo "<th>".$cf."</th>";
-                echo "<th>".$cn."</th>";
-                echo "<th>".$isi."</th>";
+                echo "<td>".$key."</td>";
+                echo "<td>".$cf.":".$cn."</td>";
+                echo "<td>".$isi."</td>";
                 echo "</tr>";
             }
         }
