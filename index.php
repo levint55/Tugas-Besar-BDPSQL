@@ -34,7 +34,7 @@
         </form>
     </div> 
     <?php
-        scan_db('tweet');
+        scan_db('mahasiswa');
         // scan database
         //scan_db('mahasiswa');
         

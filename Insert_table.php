@@ -25,13 +25,23 @@
     </ul>
     <div class="container">
         <h1>Insert Tables</h1>
-        <form action="inser_table.php" method="post">
+        <form action="insert_table.php" method="post">
         <div class="form-group">
             <label for="table_name">Table Name:</label>
             <input type="text" class="form-control" id="table_name" name="table_name" required>
         </div>
 
-           <button type="submit" class="btn btn-primary">Insert</button>
+        <div class="form-group">
+            <label for="table_name">Nama:</label>
+            <input type="text" class="form-control" id="insert_column" name="insert_column" required>
+        </div>
+
+        <div class="form-group">
+            <label for="table_name">Data:</label>
+            <input type="text" class="form-control" id="insert_data" name="insert_data" required>
+        </div>
+
+           <button type="submit" class="btn btn-primary" id="insert">Insert</button>
         </form>
     </div>
 
@@ -40,26 +50,38 @@
 
         // scan database
         //scan_db('mahasiswa');
+        if($_SERVER['REQUEST_METHOD'] === 'POST'){
+            $arr_data = [];
+            $data1 =array(
+                "column"=>base64_encode("nilai:DAA"),
+                "$"=>base64_encode($_POST['insert_data'])
+            );
+            array_push($arr_data,$data1);
+           
+            $table_name=$_POST['table_name'];
+            $key=$_POST['insert_column'];
+            add_to_db($table_name,$key,$arr_data);
+            echo "tabel ".$_POST['table_name']." berhasil dimasukkan";
+        }
+      
+        // $data1 = array(
+        //     'column' => base64_encode('nilai:DAA'),
+        //     '$' => base64_encode('10')
+        // );
         
-        // insert data to database
-        $data1 = array(
-            'column' => base64_encode('nilai:DAA'),
-            '$' => base64_encode('10')
-        );
-        
-        $data2 = array(
-            'column' => base64_encode('nilai:PBO'),
-            '$' => base64_encode('50')
-        );
+        // $data2 = array(
+        //     'column' => base64_encode('nilai:PBO'),
+        //     '$' => base64_encode('50')
+        // );
         
         // $arr_data = [];
         
         // array_push($arr_data, $data1, $data2);
         
-        add_to_db('mahasiswa', 'Bebas', $arr_data);
+        // add_to_db('mahasiswa', 'Bebas', $arr_data);
 
-        // // get from database
-        // get_db('mahasiswa', 'Kris');
+        // get from database
+        //get_db('mahasiswa', 'David');
 
 
         function add_to_db($table_name, $key, $data){
