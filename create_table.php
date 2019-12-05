@@ -20,6 +20,9 @@
         <li class="nav-item">
             <a class="nav-link" href="/delete_table.php">Delete Table</a>
         </li>
+        <li class="nav-item">
+            <a class="nav-link" href="/insert_table.php">Insert Table</a>
+        </li>
     </ul>
     <div class="container">
         <h1>Create Table</h1>
@@ -86,7 +89,7 @@
             curl_setopt($ch, CURLOPT_HTTPHEADER, $request_headers);
 
             // set url 
-            curl_setopt($ch, CURLOPT_URL, "http://localhost:8081/$table_name/schema");
+            curl_setopt($ch, CURLOPT_URL, "http://192.168.99.101:8081/$table_name/schema");
 
             // return the transfer as a string 
             // curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1); 

@@ -11,7 +11,7 @@
 <body>
     <ul class="nav">
     <li class="nav-item">
-        <a class="nav-link" href="/">Home</a>
+        <a class="nav-link" href="index.php">Home</a>
     </li>
     <li class="nav-item">
         <a class="nav-link" href="/create_table.php">Create Table</a>
@@ -20,71 +20,47 @@
         <a class="nav-link" href="/delete_table.php">Delete Table</a>
     </li>
     <li class="nav-item">
-        <a class="nav-link" href="/insert_table.php">Insert Table</a>
+        <a class="nav-link" href="/">Insert Table</a>
     </li>
     </ul>
     <div class="container">
-        <h1>Look for Tables</h1>
-        <form action="index.php" method="post">
+        <h1>Insert Tables</h1>
+        <form action="inser_table.php" method="post">
         <div class="form-group">
             <label for="table_name">Table Name:</label>
             <input type="text" class="form-control" id="table_name" name="table_name" required>
         </div>
-           <button type="submit" class="btn btn-primary">Search</button>
+
+           <button type="submit" class="btn btn-primary">Insert</button>
         </form>
-    </div> 
+    </div>
+
     <?php
-        scan_db('tweet');
+        
+
         // scan database
         //scan_db('mahasiswa');
         
-        // // insert data to database
-        // $data1 = array(
-        //     'column' => base64_encode('nilai:DAA'),
-        //     '$' => base64_encode('10')
-        // );
+        // insert data to database
+        $data1 = array(
+            'column' => base64_encode('nilai:DAA'),
+            '$' => base64_encode('10')
+        );
         
-        // $data2 = array(
-        //     'column' => base64_encode('nilai:PBO'),
-        //     '$' => base64_encode('50')
-        // );
+        $data2 = array(
+            'column' => base64_encode('nilai:PBO'),
+            '$' => base64_encode('50')
+        );
         
         // $arr_data = [];
         
         // array_push($arr_data, $data1, $data2);
         
-        // add_to_db('mahasiswa', 'Bebas', $arr_data);
+        add_to_db('mahasiswa', 'Bebas', $arr_data);
 
         // // get from database
         // get_db('mahasiswa', 'Kris');
-        function scan_db($table_name){
-            // persiapkan curl
-            $ch = curl_init(); 
 
-            // header
-            $request_headers = array();
-            $request_headers[] = 'Accept: application/json';
-            $request_headers[] = 'Content-Type: application/json';
-
-            // set header
-            curl_setopt($ch, CURLOPT_HTTPHEADER, $request_headers);
-
-            // set url 
-            curl_setopt($ch, CURLOPT_URL, "http://192.168.99.101:8081/$table_name/*");
-
-            // return the transfer as a string 
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1); 
-
-            // $output contains the output string 
-            $output = curl_exec($ch); 
-
-            // tutup curl 
-            curl_close($ch);      
-
-            // menampilkan hasil curl
-            json_to_normal($output);
-            
-        }
 
         function add_to_db($table_name, $key, $data){
             $record = new Record(base64_encode($key), $data);
@@ -118,33 +94,6 @@
             curl_exec($ch);
             // tutup curl 
             curl_close($ch);
-        }
-
-        function get_db($table_name, $key){
-            // persiapkan curl
-            $ch = curl_init(); 
-
-            // header
-            $request_headers = array();
-            $request_headers[] = 'Accept: application/json';
-            $request_headers[] = 'Content-Type: application/json';
-
-            // set header
-            curl_setopt($ch, CURLOPT_HTTPHEADER, $request_headers);
-
-            // set url 
-            curl_setopt($ch, CURLOPT_URL, "http://192.168.99.101:8081/$table_name/$key");
-
-            // return the transfer as a string 
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1); 
-
-            // $output contains the output string 
-            $output = curl_exec($ch);
-
-            // tutup curl 
-            curl_close($ch);      
-
-            json_to_normal($output);
         }
 
         function json_to_normal($datas){
