@@ -9,36 +9,6 @@
     <link href="css/bootstrap.css" rel="stylesheet" />
     <script src="js/bootstrap.min.js"></script>
 </head>
-<style>
-    #customers {
-        font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
-        border-collapse: collapse;
-        width: 100%;
-    }
-
-    #customers td,
-    #customers th {
-        border: 1px solid #ddd;
-        padding: 8px;
-    }
-
-    #customers tr:nth-child(even) {
-        background-color: #f2f2f2;
-    }
-
-    #customers tr:hover {
-        background-color: #ddd;
-    }
-
-    #customers th {
-        padding-top: 12px;
-        padding-bottom: 12px;
-        text-align: left;
-        background-color: #4CAF50;
-        color: white;
-    }
-</style>
-
 <body>
     <ul class="nav">
         <li class="nav-item">
@@ -54,15 +24,17 @@
             <a class="nav-link" href="/insert_table.php">Insert Table</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" href="/">Get Row By Row Key</a>
+            <a class="nav-link" href="/get_row_by_row_key.php">Get Row By Row Key</a>
         </li>
     </ul>
     <div class="container">
         <h1>Get Row By Row Key</h1>
         <form action="get_row_by_row_key.php" method="post">
             <div class="form-group">
-                <label for="table_name">Table Name:</label>
-                <input type="text" class="form-control" id="table_name" name="table_name" required>
+                <label for="table_name">Nama Table:</label>
+                <select id="tbl_list" name="table_option" class="custom-select mb-3">
+                    <?php list_db() ?>
+                </select>
             </div>
 
             <div class="form-group">
@@ -76,14 +48,14 @@
 
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         echo "<br>";
-        echo "<h2 class='container'> Mahasiswa dengan Row Key " . $_POST['insert_key']."</h2>";
+        echo "<h3 class='container'> Mahasiswa dengan Row Key " . $_POST['insert_key'] . "</h3>";
         echo "<br>";
         $arr_data = [];
-        $table_name = $_POST['table_name'];
+        $table_name = $_POST['table_option'];
         $key = $_POST['insert_key'];
-  
+
         get_db($table_name, $key);
-    } else { }
+    } 
 
     function scan_db($table_name)
     {
@@ -114,7 +86,43 @@
         json_to_table($output);
     }
 
+    function list_db()
+    {
+        $ch = curl_init();
 
+        // header
+        $request_headers = array();
+        $request_headers[] = 'Accept: application/json';
+        $request_headers[] = 'Content-Type: application/json';
+
+        // set header
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $request_headers);
+
+        // set url 
+        curl_setopt($ch, CURLOPT_URL, "http://192.168.99.101:8081/");
+
+        // return the transfer as a string 
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+
+        // $output contains the output string 
+        $output = curl_exec($ch);
+
+        // tutup curl 
+        curl_close($ch);
+
+        json_to_list($output);
+    }
+
+    function json_to_list($datas)
+    {
+        $datas = json_decode($datas);
+        $obj = $datas->table;
+
+        foreach ($obj as $data) {
+            $name = $data->name;
+            echo "<option id=table_option value=" . $name . ">" . $name . "</option>";
+        }
+    }
 
     function get_db($table_name, $key)
     {
@@ -187,7 +195,8 @@
         $datas = json_decode($datas);
         $obj = $datas->Row;
 
-        echo "<table id='customers', style='width:60%', align='center'>";
+        echo "<div class='container'>";
+        echo "<table class ='table table-striped'>";
         echo "<tr>";
         echo "<th>Row</th>";
         echo "<th>Column Family:Name</th>";
@@ -222,6 +231,7 @@
         }
 
         echo "</table>";
+        echo "</div>";
     }
 
     class Record
