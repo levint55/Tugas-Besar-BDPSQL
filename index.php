@@ -49,11 +49,19 @@
             <a class="nav-link" href="/insert_table.php">Insert Table</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" href="/get_table.php">Get Row From Table</a>
+            <a class="nav-link" href="/get_row_by_row_key.php">Get Row By Row Key</a>
         </li>
     </ul>
+
     <div class="container">
-        <h1>Look for Tables</h1>
+        <h1> List Of All Tables </h1>
+        <?php 
+            list_db();
+            echo "<br>";
+        ?>
+    </div>
+    <div class="container">
+        <h2>Look for Tables</h2>
         <form action="index.php" method="post">
             <div class="form-group">
                 <label for="table_name">Table Name:</label>
@@ -64,16 +72,15 @@
     </div>
     <?php
 
+
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-        echo "Tabel " . $_POST['table_name'];
+        echo "<br>";
+        echo "<h3 class='container'>Tabel " . $_POST['table_name']."</h3>";
         echo "<br>";
         $arr_data = [];
         $table_name = $_POST['table_name'];
         scan_db($table_name);
-        get_db('mahasiswa', 'Ravi');
-    } else { 
-        
-    }
+    } 
 
     function scan_db($table_name)
     {
@@ -99,16 +106,11 @@
 
         // tutup curl 
         curl_close($ch);
-
         // menampilkan hasil curl
         json_to_table($output);
     }
 
-
-
-    function get_db($table_name, $key)
-    {
-        // persiapkan curl
+    function list_db(){
         $ch = curl_init();
 
         // header
@@ -120,7 +122,7 @@
         curl_setopt($ch, CURLOPT_HTTPHEADER, $request_headers);
 
         // set url 
-        curl_setopt($ch, CURLOPT_URL, "http://192.168.99.101:8081/$table_name/$key");
+        curl_setopt($ch, CURLOPT_URL, "http://192.168.99.101:8081/");
 
         // return the transfer as a string 
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -130,54 +132,30 @@
 
         // tutup curl 
         curl_close($ch);
-
-        json_to_normal($output);
+        
+        json_to_list($output);
     }
 
-    function json_to_normal($datas)
-    {
+
+    function json_to_list($datas){
         $datas = json_decode($datas);
-        $obj = $datas->Row;
+        $obj = $datas->table;
 
-        foreach ($obj as $data) {
-            // nama key
-            $key = base64_decode($data->key);
-            echo $key;
-            echo ": ";
-
-            // ambil cell
-            $cells = (array) $data->Cell;
-
-            foreach ($cells as $cell) {
-                // ambil column
-                $column = (array) $cell;
-
-                $kolom = base64_decode($column['column']);
-                $arr_kolom = explode(':', $kolom);
-
-                // var_dump($arr_kolom);
-                $cf = $arr_kolom[0];
-                $cn = $arr_kolom[1];
-
-                $isi = base64_decode($column["\$"]);
-
-                echo $cf;
-                echo " ";
-                echo $cn;
-                echo " ";
-                echo $isi;
-                echo ", ";
-            }
+        foreach ($obj as $data){
+            $name=$data->name;
+            echo $name;
             echo "<br>";
         }
     }
+
 
     function json_to_table($datas)
     {
         $datas = json_decode($datas);
         $obj = $datas->Row;
 
-        echo "<table id='customers', style='width:60%', align='center'>";
+        echo "<div class='container'>";
+        echo "<table class ='table table-striped'>";
         echo "<tr>";
         echo "<th>Row</th>";
         echo "<th>Column Family:Name</th>";
@@ -212,6 +190,7 @@
         }
 
         echo "</table>";
+        echo "</div>";
     }
 
     class Record
@@ -235,7 +214,10 @@
             array_push($this->Row, $record);
         }
     }
+
     ?>
+
+    
 </body>
 
 </html>

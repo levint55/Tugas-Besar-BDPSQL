@@ -23,7 +23,7 @@
             <a class="nav-link" href="/insert_table.php">Insert Table</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" href="/get_table.php">Get Row From Table</a>
+            <a class="nav-link" href="/get_row_by_row_key.php">Get Row By Row Key</a>
         </li>
     </ul>
     <div class="container">

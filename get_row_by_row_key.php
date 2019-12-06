@@ -54,12 +54,12 @@
             <a class="nav-link" href="/insert_table.php">Insert Table</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" href="/">Filter Table</a>
+            <a class="nav-link" href="/">Get Row By Row Key</a>
         </li>
     </ul>
     <div class="container">
-        <h1>Filter By Row Key</h1>
-        <form action="get_table.php" method="post">
+        <h1>Get Row By Row Key</h1>
+        <form action="get_row_by_row_key.php" method="post">
             <div class="form-group">
                 <label for="table_name">Table Name:</label>
                 <input type="text" class="form-control" id="table_name" name="table_name" required>
@@ -69,13 +69,14 @@
                 <label for="table_name">Row Key</label>
                 <input type="text" class="form-control" id="insert_key" name="insert_key" required>
             </div>
-            <button type="submit" class="btn btn-primary">Filter</button>
+            <button type="submit" class="btn btn-primary">Get Row</button>
         </form>
     </div>
     <?php
 
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-        echo "Filtered " . $_POST['table_name'];
+        echo "<br>";
+        echo "<h2 class='container'> Mahasiswa dengan Row Key " . $_POST['insert_key']."</h2>";
         echo "<br>";
         $arr_data = [];
         $table_name = $_POST['table_name'];
