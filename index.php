@@ -10,28 +10,33 @@
     <script src="js/bootstrap.min.js"></script>
 </head>
 <style>
-#customers {
-  font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
-  border-collapse: collapse;
-  width: 100%;
-}
+    #customers {
+        font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+        border-collapse: collapse;
+        width: 100%;
+    }
 
-#customers td, #customers th {
-  border: 1px solid #ddd;
-  padding: 8px;
-}
+    #customers td,
+    #customers th {
+        border: 1px solid #ddd;
+        padding: 8px;
+    }
 
-#customers tr:nth-child(even){background-color: #f2f2f2;}
+    #customers tr:nth-child(even) {
+        background-color: #f2f2f2;
+    }
 
-#customers tr:hover {background-color: #ddd;}
+    #customers tr:hover {
+        background-color: #ddd;
+    }
 
-#customers th {
-  padding-top: 12px;
-  padding-bottom: 12px;
-  text-align: left;
-  background-color: #4CAF50;
-  color: white;
-}
+    #customers th {
+        padding-top: 12px;
+        padding-bottom: 12px;
+        text-align: left;
+        background-color: #4CAF50;
+        color: white;
+    }
 </style>
 
 <body>
@@ -55,17 +60,19 @@
 
     <div class="container">
         <h1> List Of All Tables </h1>
-        <?php 
-            list_db();
-            echo "<br>";
+        <?php
+        list_db();
+        echo "<br>";
         ?>
     </div>
     <div class="container">
         <h2>Look for Tables</h2>
         <form action="index.php" method="post">
             <div class="form-group">
-                <label for="table_name">Table Name:</label>
-                <input type="text" class="form-control" id="table_name" name="table_name" required>
+                <label for="table_name">Nama Table:</label>
+                <select id="tbl_list" name="table_option" class="custom-select mb-3">
+                    <?php list_db_drop_down() ?>
+                </select>
             </div>
             <button type="submit" class="btn btn-primary">Search</button>
         </form>
@@ -75,12 +82,12 @@
 
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         echo "<br>";
-        echo "<h3 class='container'>Tabel " . $_POST['table_name']."</h3>";
+        echo "<h3 class='container'>Tabel " . $_POST['table_option'] . "</h3>";
         echo "<br>";
         $arr_data = [];
-        $table_name = $_POST['table_name'];
+        $table_name = $_POST['table_option'];
         scan_db($table_name);
-    } 
+    }
 
     function scan_db($table_name)
     {
@@ -110,7 +117,8 @@
         json_to_table($output);
     }
 
-    function list_db(){
+    function list_db()
+    {
         $ch = curl_init();
 
         // header
@@ -132,19 +140,58 @@
 
         // tutup curl 
         curl_close($ch);
-        
+
         json_to_list($output);
     }
 
 
-    function json_to_list($datas){
+    function json_to_list($datas)
+    {
         $datas = json_decode($datas);
         $obj = $datas->table;
 
-        foreach ($obj as $data){
-            $name=$data->name;
+        foreach ($obj as $data) {
+            $name = $data->name;
             echo $name;
             echo "<br>";
+        }
+    }
+
+    function list_db_drop_down()
+    {
+        $ch = curl_init();
+
+        // header
+        $request_headers = array();
+        $request_headers[] = 'Accept: application/json';
+        $request_headers[] = 'Content-Type: application/json';
+
+        // set header
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $request_headers);
+
+        // set url 
+        curl_setopt($ch, CURLOPT_URL, "http://192.168.99.101:8081/");
+
+        // return the transfer as a string 
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+
+        // $output contains the output string 
+        $output = curl_exec($ch);
+
+        // tutup curl 
+        curl_close($ch);
+
+        json_to_list_dropdown($output);
+    }
+
+    function json_to_list_dropdown($datas)
+    {
+        $datas = json_decode($datas);
+        $obj = $datas->table;
+
+        foreach ($obj as $data) {
+            $name = $data->name;
+            echo "<option id=table_option value=" . $name . ">" . $name . "</option>";
         }
     }
 
@@ -182,9 +229,9 @@
                 $isi = base64_decode($column["\$"]);
 
                 echo "<tr>";
-                echo "<td>".$key."</td>";
-                echo "<td>".$cf.":".$cn."</td>";
-                echo "<td>".$isi."</td>";
+                echo "<td>" . $key . "</td>";
+                echo "<td>" . $cf . ":" . $cn . "</td>";
+                echo "<td>" . $isi . "</td>";
                 echo "</tr>";
             }
         }
@@ -217,7 +264,7 @@
 
     ?>
 
-    
+
 </body>
 
 </html>
